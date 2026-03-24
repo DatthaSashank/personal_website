@@ -20,6 +20,44 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   line-height: 1.6;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Fun colorful background Google shapes */
+body::before, body::after {
+  content: "";
+  position: fixed;
+  border-radius: 50%;
+  z-index: -1;
+  filter: blur(80px);
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+body::before {
+  width: 400px;
+  height: 400px;
+  background: #ea4335; /* Google Red */
+  top: -100px;
+  left: -100px;
+  box-shadow: 600px 300px 0 100px #fbbc05; /* Google Yellow */
+  animation: float 20s infinite alternate;
+}
+
+body::after {
+  width: 500px;
+  height: 500px;
+  background: #4285f4; /* Google Blue */
+  bottom: -200px;
+  right: -100px;
+  box-shadow: -500px -200px 0 50px #34a853; /* Google Green */
+  animation: float 25s infinite alternate-reverse;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px) scale(1); }
+  100% { transform: translateY(-50px) scale(1.1); }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -36,22 +74,22 @@ h1, h2, h3, h4, h5, h6 {
 .glass-card {
   background: var(--card);
   border: 1px solid var(--card-border);
-  border-radius: 8px;
-  padding: 1.5rem;
+  border-radius: 24px; /* Playful Google cards */
+  padding: 2rem;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .glass-card:hover {
-  box-shadow: 0 4px 6px rgba(32, 33, 36, 0.05);
-  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(32, 33, 36, 0.08); /* Bouncier shadow */
+  transform: translateY(-4px);
 }
 
 .btn-primary {
   background: var(--primary);
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: 9999px; /* Google UI pill button */
   color: white;
-  padding: 0.5rem 1.2rem;
+  padding: 0.75rem 1.5rem;
   font-weight: 500;
   font-family: var(--font-sans);
   cursor: pointer;
@@ -70,8 +108,8 @@ h1, h2, h3, h4, h5, h6 {
   background: transparent;
   border: 1px solid var(--card-border);
   color: var(--primary);
-  border-radius: 4px;
-  padding: 0.5rem 1.2rem;
+  border-radius: 9999px; /* Google UI pill button */
+  padding: 0.75rem 1.5rem;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.2s;
@@ -97,14 +135,19 @@ h1, h2, h3, h4, h5, h6 {
 
 .input-field {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 1rem 1.5rem;
   border: 1px solid var(--card-border);
-  border-radius: 4px;
+  border-radius: 9999px; /* Google Search Bar Pill */
   font-family: var(--font-sans);
   font-size: 1rem;
   color: var(--foreground);
   background: var(--background);
   box-sizing: border-box;
+}
+
+/* For textareas we shouldn't use a full pill radius because it looks broken. Use rounded corners instead. */
+textarea.input-field {
+  border-radius: 20px;
 }
 
 .input-field:focus {
