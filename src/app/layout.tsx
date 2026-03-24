@@ -33,7 +33,7 @@ export default function RootLayout({
             <Link href="/" style={{ color: 'var(--secondary)', textDecoration: 'none', fontSize: '0.95rem', fontWeight: '500' }}>Home</Link>
             <Link href="/about" style={{ color: 'var(--secondary)', textDecoration: 'none', fontSize: '0.95rem', fontWeight: '500' }}>About</Link>
             <Link href="/blog" style={{ color: 'var(--secondary)', textDecoration: 'none', fontSize: '0.95rem', fontWeight: '500' }}>Articles</Link>
-            <Link href="/admin" className="btn-secondary" style={{ padding: '0.35rem 0.8rem', fontSize: '0.85rem' }}>Admin</Link>
+            <Link href="/profile" className="btn-secondary" style={{ padding: '0.35rem 0.8rem', fontSize: '0.85rem' }}>Profile</Link>
           </nav>
         </header>
         <main style={{ maxWidth: '900px', margin: '0 auto', padding: '3rem 1.5rem' }}>

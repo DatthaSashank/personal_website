@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import CreateBlogForm from '@/components/CreateBlogForm'
 
 // Ensure this page is completely dynamic so it fetches the latest blogs on every request
 export const revalidate = 0;
@@ -16,7 +17,11 @@ export default async function BlogIndex() {
 
   return (
     <div>
-      <h1 style={{ fontSize: '2.5rem', marginBottom: '2rem', fontWeight: 600 }}>Latest Articles</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <h1 style={{ fontSize: '2.5rem', fontWeight: 600, margin: 0 }}>Latest Articles</h1>
+      </div>
+
+      <CreateBlogForm />
       
       {!blogs || blogs.length === 0 ? (
         <p style={{ color: 'var(--secondary)' }}>No articles published yet. Use the Admin dashboard to write one!</p>
