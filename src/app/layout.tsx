@@ -3,8 +3,8 @@ import './globals.css'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Colorful Creator',
-  description: 'My personalized AI ecosystem and blog',
+  title: 'Dattha Sashank',
+  description: 'Professional Portfolio & Blog',
 }
 
 export default function RootLayout({
@@ -19,24 +19,24 @@ export default function RootLayout({
           display: 'flex', 
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: '1.5rem 3rem', 
+          padding: '1.25rem 2rem', 
           borderBottom: '1px solid var(--card-border)',
-          background: 'rgba(15, 23, 42, 0.8)',
-          backdropFilter: 'blur(10px)',
+          background: '#ffffff',
           position: 'sticky',
           top: 0,
           zIndex: 50
         }}>
-          <Link href="/" className="colorful-text" style={{ fontSize: '1.5rem', fontWeight: 'bold', textDecoration: 'none' }}>
+          <Link href="/" style={{ fontSize: '1.25rem', fontWeight: 'bold', textDecoration: 'none', color: 'var(--foreground)' }}>
             Dattha Sashank
           </Link>
-          <nav style={{ display: 'flex', gap: '2rem' }}>
-            <Link href="/" style={{ color: 'var(--foreground)', textDecoration: 'none', fontWeight: '500' }}>Home</Link>
-            <Link href="/about" style={{ color: 'var(--foreground)', textDecoration: 'none', fontWeight: '500' }}>About</Link>
-            <Link href="/blog" style={{ color: 'var(--foreground)', textDecoration: 'none', fontWeight: '500' }}>Blog</Link>
+          <nav style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+            <Link href="/" style={{ color: 'var(--secondary)', textDecoration: 'none', fontSize: '0.95rem', fontWeight: '500' }}>Home</Link>
+            <Link href="/about" style={{ color: 'var(--secondary)', textDecoration: 'none', fontSize: '0.95rem', fontWeight: '500' }}>About</Link>
+            <Link href="/blog" style={{ color: 'var(--secondary)', textDecoration: 'none', fontSize: '0.95rem', fontWeight: '500' }}>Articles</Link>
+            <Link href="/admin" className="btn-secondary" style={{ padding: '0.35rem 0.8rem', fontSize: '0.85rem' }}>Admin</Link>
           </nav>
         </header>
-        <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '3rem 2rem' }}>
+        <main style={{ maxWidth: '900px', margin: '0 auto', padding: '3rem 1.5rem' }}>
           {children}
         </main>
       </body>

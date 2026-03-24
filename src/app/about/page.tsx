@@ -1,39 +1,46 @@
-export default function About() {
+import { supabase } from '@/lib/supabase'
+
+export const revalidate = 0;
+
+export default async function About() {
+  const { data: profiles, error } = await supabase.from('profiles').select('*');
+
+  // Helper to safely get profile content
+  const getProfile = (key: string) => profiles?.find(p => p.section_key === key);
+  const personal = getProfile('personal');
+  const professional = getProfile('professional');
+  const certifications = getProfile('certifications');
+
   return (
-    <div style={{ animation: 'fadeIn 0.5s' }}>
-      <h1 className="colorful-text" style={{ fontSize: '3rem', marginBottom: '2rem' }}>About Me</h1>
+    <div>
+      <h1 style={{ fontSize: '2.5rem', marginBottom: '2rem', fontWeight: 600 }}>About Dattha Sashank</h1>
       
       <div style={{ display: 'grid', gap: '2rem' }}>
         <section className="glass-card">
-          <h2 style={{ fontSize: '1.8rem', color: 'var(--primary)', marginBottom: '1rem' }}>Personal Story</h2>
-          <p style={{ lineHeight: 1.6, color: '#e2e8f0' }}>
-            I am a passionate technologist, constantly exploring the intersections of software architecture and Artificial Intelligence. This website serves as a canvas for my ideas, professional journey, and experimental AI agents.
+          <h2 style={{ fontSize: '1.5rem', color: 'var(--foreground)', marginBottom: '1rem', fontWeight: 600 }}>
+             {personal ? personal.title : 'Personal Story'}
+          </h2>
+          <p style={{ lineHeight: 1.6, color: 'var(--secondary)' }}>
+            {personal ? personal.content : "Data not found. Please add via Admin dashboard."}
           </p>
         </section>
 
         <section className="glass-card">
-          <h2 style={{ fontSize: '1.8rem', color: 'var(--secondary)', marginBottom: '1rem' }}>Professional Journey</h2>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            <li style={{ marginBottom: '1.5rem', borderLeft: '3px solid var(--secondary)', paddingLeft: '1rem' }}>
-              <h3 style={{ fontSize: '1.2rem', margin: '0 0 0.5rem 0' }}>Senior Software Engineer</h3>
-              <span style={{ color: '#94a3b8', fontSize: '0.9rem' }}>2021 - Present</span>
-              <p style={{ marginTop: '0.5rem', color: '#e2e8f0' }}>Leading architecture for scalable web applications and exploring AI integrations.</p>
-            </li>
-            <li style={{ borderLeft: '3px solid var(--secondary)', paddingLeft: '1rem' }}>
-              <h3 style={{ fontSize: '1.2rem', margin: '0 0 0.5rem 0' }}>Full Stack Developer</h3>
-              <span style={{ color: '#94a3b8', fontSize: '0.9rem' }}>2018 - 2021</span>
-              <p style={{ marginTop: '0.5rem', color: '#e2e8f0' }}>Developed robust ecosystems using React, Node.js, and Cloud Infrastructure.</p>
-            </li>
-          </ul>
+          <h2 style={{ fontSize: '1.5rem', color: 'var(--foreground)', marginBottom: '1rem', fontWeight: 600 }}>
+             {professional ? professional.title : 'Professional Journey'}
+          </h2>
+          <p style={{ lineHeight: 1.6, color: 'var(--secondary)', whiteSpace: 'pre-wrap' }}>
+             {professional ? professional.content : "Data not found. Please add via Admin dashboard."}
+          </p>
         </section>
 
         <section className="glass-card">
-          <h2 style={{ fontSize: '1.8rem', color: 'var(--accent)', marginBottom: '1rem' }}>Certifications</h2>
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-            <span style={{ background: 'rgba(6, 182, 212, 0.2)', padding: '0.5rem 1rem', borderRadius: '999px', border: '1px solid var(--accent)' }}>AWS Solutions Architect</span>
-            <span style={{ background: 'rgba(6, 182, 212, 0.2)', padding: '0.5rem 1rem', borderRadius: '999px', border: '1px solid var(--accent)' }}>React Advanced Certification</span>
-            <span style={{ background: 'rgba(6, 182, 212, 0.2)', padding: '0.5rem 1rem', borderRadius: '999px', border: '1px solid var(--accent)' }}>Generative AI Fundamentals</span>
-          </div>
+          <h2 style={{ fontSize: '1.5rem', color: 'var(--foreground)', marginBottom: '1rem', fontWeight: 600 }}>
+             {certifications ? certifications.title : 'Certifications'}
+          </h2>
+          <p style={{ lineHeight: 1.6, color: 'var(--secondary)', whiteSpace: 'pre-wrap' }}>
+             {certifications ? certifications.content : "Data not found. Please add via Admin dashboard."}
+          </p>
         </section>
       </div>
     </div>

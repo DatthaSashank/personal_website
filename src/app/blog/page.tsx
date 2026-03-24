@@ -1,38 +1,40 @@
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
 
-const blogs = [
-  {
-    slug: 'future-of-ai-agents',
-    title: 'The Future of AI Agents in Web Ecosystems',
-    excerpt: 'Exploring how autonomous agents will transform personal websites into interactive digital twins.',
-    date: 'March 24, 2026',
-    color: 'var(--primary)'
-  },
-  {
-    slug: 'building-colorful-uis',
-    title: 'Building Vibrant UIs with Vanilla CSS',
-    excerpt: 'Why sometimes stepping away from utility frameworks can lead to more creative, glowing designs.',
-    date: 'March 20, 2026',
-    color: 'var(--secondary)'
+// Ensure this page is completely dynamic so it fetches the latest blogs on every request
+export const revalidate = 0;
+
+export default async function BlogIndex() {
+  const { data: blogs, error } = await supabase
+    .from('blogs')
+    .select('title, slug, excerpt, created_at')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error("Error fetching blogs:", error);
   }
-]
 
-export default function BlogIndex() {
   return (
-    <div style={{ animation: 'fadeIn 0.5s' }}>
-      <h1 className="colorful-text" style={{ fontSize: '3rem', marginBottom: '2rem' }}>My Thoughts</h1>
+    <div>
+      <h1 style={{ fontSize: '2.5rem', marginBottom: '2rem', fontWeight: 600 }}>Latest Articles</h1>
       
-      <div style={{ display: 'grid', gap: '2rem' }}>
-        {blogs.map(blog => (
-          <Link href={`/blog/${blog.slug}`} key={blog.slug} style={{ textDecoration: 'none' }}>
-            <div className="glass-card" style={{ borderLeft: `4px solid ${blog.color}` }}>
-              <h2 style={{ fontSize: '1.8rem', marginBottom: '0.5rem', color: 'var(--foreground)' }}>{blog.title}</h2>
-              <div style={{ color: '#94a3b8', fontSize: '0.9rem', marginBottom: '1rem' }}>{blog.date}</div>
-              <p style={{ color: '#e2e8f0', lineHeight: 1.6 }}>{blog.excerpt}</p>
-            </div>
-          </Link>
-        ))}
-      </div>
+      {!blogs || blogs.length === 0 ? (
+        <p style={{ color: 'var(--secondary)' }}>No articles published yet. Use the Admin dashboard to write one!</p>
+      ) : (
+        <div style={{ display: 'grid', gap: '2rem' }}>
+          {blogs.map(blog => (
+            <Link href={`/blog/${blog.slug}`} key={blog.slug} style={{ textDecoration: 'none' }}>
+              <div className="glass-card">
+                <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: 'var(--primary)' }}>{blog.title}</h2>
+                <div style={{ color: 'var(--secondary)', fontSize: '0.9rem', marginBottom: '1rem' }}>
+                  {new Date(blog.created_at).toLocaleDateString()}
+                </div>
+                <p style={{ color: 'var(--foreground)', lineHeight: 1.6 }}>{blog.excerpt}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
