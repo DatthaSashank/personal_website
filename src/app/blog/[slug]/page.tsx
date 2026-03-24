@@ -7,12 +7,12 @@ export const revalidate = 0;
 
 export default async function BlogPost(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
-  const slug = params.slug;
+  const decodedSlug = decodeURIComponent(params.slug);
   
   const { data: post, error } = await supabase
     .from('blogs')
     .select('*')
-    .eq('slug', slug)
+    .eq('slug', decodedSlug)
     .single();
 
   if (error || !post) {

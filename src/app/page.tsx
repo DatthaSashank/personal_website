@@ -14,9 +14,6 @@ export default function Home() {
           <Link href="/blog" className="btn-primary">
             Read My Articles
           </Link>
-          <Link href="/about" className="btn-secondary">
-            More About Me
-          </Link>
         </div>
       </header>
 

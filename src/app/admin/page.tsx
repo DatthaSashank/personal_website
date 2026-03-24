@@ -20,9 +20,11 @@ export default function AdminDashboard() {
     e.preventDefault()
     setStatus('Posting...')
     
+    const safeSlug = blogSlug.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '')
+
     const { error } = await supabase.from('blogs').insert({
       title: blogTitle,
-      slug: blogSlug,
+      slug: safeSlug,
       excerpt: blogExcerpt,
       content: blogContent
     })
@@ -30,7 +32,7 @@ export default function AdminDashboard() {
     if (error) {
       setStatus(`Error: ${error.message}`)
     } else {
-      setStatus('Blog posted successfully!')
+      setStatus('Just posted! Ready for another.')
       setBlogTitle('')
       setBlogSlug('')
       setBlogExcerpt('')
