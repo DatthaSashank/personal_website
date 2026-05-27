@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #202124; /* Google grey-900 */
-  --primary: #1a73e8; /* Google blue */
-  --secondary: #5f6368; /* Google grey-700 */
-  --accent: #34a853; /* Google green */
-  --card: #ffffff;
-  --card-border: #dadce0; /* Google border */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-serif: "Charter", "Bitstream Charter", "Sitka Text", Cambria, serif; /* Medium style reading */
+  --background: #fbfbfd;
+  --foreground: #1d1d1f;
+  --primary: #0071e3; /* Apple Blue */
+  --secondary: #86868b; /* Apple Grey */
+  --accent: #10b981; /* Mint Green */
+  --card: rgba(255, 255, 255, 0.75);
+  --card-border: rgba(0, 0, 0, 0.05);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: "Charter", Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
 body {
@@ -19,139 +19,202 @@ body {
   margin: 0;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
-  line-height: 1.6;
+  line-height: 1.5;
   position: relative;
   overflow-x: hidden;
+  letter-spacing: -0.01em;
 }
 
-/* Fun colorful background Google shapes */
-body::before, body::after {
+/* Premium blurred ambient mesh background */
+body::before {
   content: "";
   position: fixed;
+  top: -20%;
+  left: 30%;
+  width: 50vw;
+  height: 50vw;
   border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.06) 0%, rgba(59, 130, 246, 0.05) 50%, transparent 100%);
+  filter: blur(100px);
   z-index: -1;
-  filter: blur(80px);
-  opacity: 0.15;
   pointer-events: none;
 }
 
-body::before {
-  width: 400px;
-  height: 400px;
-  background: #ea4335; /* Google Red */
-  top: -100px;
-  left: -100px;
-  box-shadow: 600px 300px 0 100px #fbbc05; /* Google Yellow */
-  animation: float 20s infinite alternate;
-}
-
 body::after {
-  width: 500px;
-  height: 500px;
-  background: #4285f4; /* Google Blue */
-  bottom: -200px;
-  right: -100px;
-  box-shadow: -500px -200px 0 50px #34a853; /* Google Green */
-  animation: float 25s infinite alternate-reverse;
-}
-
-@keyframes float {
-  0% { transform: translateY(0px) scale(1); }
-  100% { transform: translateY(-50px) scale(1.1); }
+  content: "";
+  position: fixed;
+  bottom: -10%;
+  right: 20%;
+  width: 40vw;
+  height: 40vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, rgba(167, 139, 250, 0.04) 60%, transparent 100%);
+  filter: blur(80px);
+  z-index: -1;
+  pointer-events: none;
 }
 
 h1, h2, h3, h4, h5, h6 {
   color: var(--foreground);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-}
-
-.colorful-text {
-  color: var(--foreground);
   font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
+/* Apple-style Card */
 .glass-card {
   background: var(--card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--card-border);
-  border-radius: 24px; /* Playful Google cards */
-  padding: 2rem;
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  border-radius: 20px;
+  padding: 1.75rem;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
 }
 
 .glass-card:hover {
-  box-shadow: 0 10px 20px rgba(32, 33, 36, 0.08); /* Bouncier shadow */
-  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+  border-color: rgba(0, 0, 0, 0.08);
 }
 
+/* Apple Buttons */
 .btn-primary {
-  background: var(--primary);
+  background: var(--foreground);
   border: 1px solid transparent;
-  border-radius: 9999px; /* Google UI pill button */
-  color: white;
-  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  color: #ffffff;
+  padding: 0.65rem 1.35rem;
   font-weight: 500;
   font-family: var(--font-sans);
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
+  transition: all 0.2s ease;
   text-decoration: none;
-  display: inline-block;
-  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
 }
 
 .btn-primary:hover {
-  background: #1557b0; 
-  box-shadow: 0 1px 3px rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+  background: #333333;
+  transform: scale(1.02);
 }
 
 .btn-secondary {
-  background: transparent;
-  border: 1px solid var(--card-border);
-  color: var(--primary);
-  border-radius: 9999px; /* Google UI pill button */
-  padding: 0.75rem 1.5rem;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid transparent;
+  color: var(--foreground);
+  border-radius: 9999px;
+  padding: 0.65rem 1.35rem;
   font-weight: 500;
+  font-family: var(--font-sans);
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
   text-decoration: none;
-  display: inline-block;
-  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
 }
 
 .btn-secondary:hover {
-  background: #f8f9fa;
+  background: rgba(0, 0, 0, 0.08);
 }
 
+.btn-danger {
+  background: #ff3b30; /* Apple Red */
+  color: #ffffff;
+  border-radius: 9999px;
+  padding: 0.65rem 1.35rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.btn-danger:hover {
+  background: #e02b20;
+}
+
+/* Form inputs */
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--foreground);
+  background: #ffffff;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+}
+
+textarea.input-field {
+  border-radius: 16px;
+  resize: vertical;
+}
+
+/* Medium-style reading */
 .article-content {
   font-family: var(--font-serif);
   font-size: 1.15rem;
-  line-height: 1.8;
-  color: #202124;
+  line-height: 1.75;
+  color: #2c2c2e;
 }
 
 .article-content p {
   margin-bottom: 1.5rem;
 }
 
-.input-field {
-  width: 100%;
-  padding: 1rem 1.5rem;
-  border: 1px solid var(--card-border);
-  border-radius: 9999px; /* Google Search Bar Pill */
-  font-family: var(--font-sans);
-  font-size: 1rem;
-  color: var(--foreground);
-  background: var(--background);
-  box-sizing: border-box;
+/* Bento Grid */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
 }
 
-/* For textareas we shouldn't use a full pill radius because it looks broken. Use rounded corners instead. */
-textarea.input-field {
-  border-radius: 20px;
+@media (min-width: 768px) {
+  .bento-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .bento-col-4 {
+    grid-column: span 4;
+  }
+  .bento-col-3 {
+    grid-column: span 3;
+  }
+  .bento-col-2 {
+    grid-column: span 2;
+  }
+  .bento-col-6 {
+    grid-column: span 6;
+  }
 }
 
-.input-field:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
