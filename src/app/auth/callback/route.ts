@@ -8,32 +8,28 @@ export async function GET(request: NextRequest) {
   const next = searchParams.get('next') || '/';
 
   if (code) {
-    // 1. Create the redirect response object first
     const verifyUrl = new URL('/auth/verify-otp', origin);
-    const response = NextResponse.redirect(verifyUrl);
+    
+    // Create an array to temporarily collect cookies set by Supabase
+    const cookiesToSetLater: any[] = [];
 
-    // 2. Initialize Supabase client bound directly to the redirect response cookies
+    // Initialize Supabase client bound to our temporary collector
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         cookies: {
           getAll() {
-            // Retrieve cookies from incoming request
-            const cookieList = request.cookies.getAll();
-            return cookieList;
+            return request.cookies.getAll();
           },
           setAll(cookiesToSet) {
-            // Write cookies directly to the redirect response
-            cookiesToSet.forEach(({ name, value, options }) => {
-              response.cookies.set(name, value, options);
-            });
+            cookiesToSet.forEach((c) => cookiesToSetLater.push(c));
           },
         },
       }
     );
 
-    // 3. Exchange OAuth code for Supabase Auth session
+    // Exchange OAuth code for Supabase Auth session
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     
     if (!error && data.user && data.user.email) {
@@ -41,11 +37,18 @@ export async function GET(request: NextRequest) {
         // Trigger sequential OTP send
         await sendOTP(data.user.email);
         
-        // Append query parameters to redirect URL
+        // Append query parameters to the URL BEFORE creating the redirect response
         verifyUrl.searchParams.set('email', data.user.email);
         verifyUrl.searchParams.set('next', next);
         
-        // Return the response which has the cookies successfully injected
+        // Now create the redirect response with the finalized URL
+        const response = NextResponse.redirect(verifyUrl);
+
+        // Inject the collected cookies into the redirect response
+        cookiesToSetLater.forEach(({ name, value, options }) => {
+          response.cookies.set(name, value, options);
+        });
+        
         return response;
       } catch (otpError) {
         console.error('Error in callback OTP trigger:', otpError);
