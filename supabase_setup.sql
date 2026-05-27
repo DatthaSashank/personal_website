@@ -2,22 +2,22 @@
 -- Copy and paste this entirely into the Supabase SQL Editor and click "Run"
 
 -- =========================================================================
--- 1. CLEANUP (Optional - Uncomment if starting fresh)
+-- 1. CLEANUP (Force recreation of all tables and triggers)
 -- =========================================================================
--- DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
--- DROP TRIGGER IF EXISTS protect_profile_roles_trigger ON public.profiles;
--- DROP FUNCTION IF EXISTS public.handle_new_user();
--- DROP FUNCTION IF EXISTS public.protect_profile_roles();
--- DROP TABLE IF EXISTS public.access_requests;
--- DROP TABLE IF EXISTS public.certifications;
--- DROP TABLE IF EXISTS public.projects;
--- DROP TABLE IF EXISTS public.blog_reactions;
--- DROP TABLE IF EXISTS public.comments;
--- DROP TABLE IF EXISTS public.blogs;
--- DROP TABLE IF EXISTS public.user_sessions;
--- DROP TABLE IF EXISTS public.otps;
--- DROP TABLE IF EXISTS public.profiles;
--- DROP TABLE IF EXISTS public.about_sections;
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+DROP TRIGGER IF EXISTS protect_profile_roles_trigger ON public.profiles;
+DROP FUNCTION IF EXISTS public.handle_new_user();
+DROP FUNCTION IF EXISTS public.protect_profile_roles();
+DROP TABLE IF EXISTS public.access_requests CASCADE;
+DROP TABLE IF EXISTS public.certifications CASCADE;
+DROP TABLE IF EXISTS public.projects CASCADE;
+DROP TABLE IF EXISTS public.blog_reactions CASCADE;
+DROP TABLE IF EXISTS public.comments CASCADE;
+DROP TABLE IF EXISTS public.blogs CASCADE;
+DROP TABLE IF EXISTS public.user_sessions CASCADE;
+DROP TABLE IF EXISTS public.otps CASCADE;
+DROP TABLE IF EXISTS public.profiles CASCADE;
+DROP TABLE IF EXISTS public.about_sections CASCADE;
 
 -- =========================================================================
 -- 2. CREATE TABLES
