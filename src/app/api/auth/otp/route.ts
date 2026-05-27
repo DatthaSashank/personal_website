@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createClient, createAdminClient } from '@/lib/supabaseServer';
+import { createAdminClient } from '@/lib/supabaseServer';
 import { sendOTP } from '@/lib/otp';
 import crypto from 'crypto';
 
@@ -8,17 +8,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { action, email, code } = body;
 
-    const supabase = await createClient();
     const supabaseAdmin = createAdminClient();
 
-    // Check if the user is authenticated with Google first
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Google session not active. Please sign in again.' }, { status: 401 });
-    }
-
-    if (user.email !== email) {
-      return NextResponse.json({ error: 'Email mismatch with active Google session.' }, { status: 400 });
+    if (!email) {
+      return NextResponse.json({ error: 'Email address is required.' }, { status: 400 });
     }
 
     // ACTION: RESEND
@@ -48,6 +41,18 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Invalid or expired verification code.' }, { status: 400 });
       }
 
+      // Fetch the registered user profile by email to link session
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .select('id')
+        .eq('email', email)
+        .single();
+
+      if (profileError || !profile) {
+        console.error('Error fetching profile for OTP session:', profileError);
+        return NextResponse.json({ error: 'No registered user profile found in database.' }, { status: 404 });
+      }
+
       // Invalidate all OTPs for this email to prevent reuse
       await supabaseAdmin.from('otps').delete().eq('email', email);
 
@@ -57,7 +62,7 @@ export async function POST(request: Request) {
 
       // Save session in database
       const { error: sessionError } = await supabaseAdmin.from('user_sessions').insert({
-        user_id: user.id,
+        user_id: profile.id,
         session_token: sessionToken,
         otp_verified: true,
         expires_at: sessionExpires.toISOString(),
@@ -70,8 +75,6 @@ export async function POST(request: Request) {
 
       // Set cookie in response
       const response = NextResponse.json({ success: true, message: 'Successfully verified!' });
-      
-      // Determine if HTTPS is active
       const isProduction = process.env.NODE_ENV === 'production';
       
       response.cookies.set('portfolio_otp_session', sessionToken, {
