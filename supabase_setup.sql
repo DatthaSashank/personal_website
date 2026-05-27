@@ -2,12 +2,13 @@
 -- Copy and paste this entirely into the Supabase SQL Editor and click "Run"
 
 -- =========================================================================
--- 1. CLEANUP (Force recreation of all tables and triggers)
+-- 1. CLEANUP (Force recreation of all tables, functions, and triggers)
 -- =========================================================================
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 DROP TRIGGER IF EXISTS protect_profile_roles_trigger ON public.profiles;
 DROP FUNCTION IF EXISTS public.handle_new_user();
 DROP FUNCTION IF EXISTS public.protect_profile_roles();
+
 DROP TABLE IF EXISTS public.access_requests CASCADE;
 DROP TABLE IF EXISTS public.certifications CASCADE;
 DROP TABLE IF EXISTS public.projects CASCADE;
@@ -24,7 +25,7 @@ DROP TABLE IF EXISTS public.about_sections CASCADE;
 -- =========================================================================
 
 -- Profiles Table (Linked to Supabase Auth users)
-CREATE TABLE IF NOT EXISTS public.profiles (
+CREATE TABLE public.profiles (
   id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email text UNIQUE NOT NULL,
   name text,
@@ -35,14 +36,14 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 );
 
 -- About Sections Table (Dynamic text sections for the About page)
-CREATE TABLE IF NOT EXISTS public.about_sections (
+CREATE TABLE public.about_sections (
   section_key text PRIMARY KEY,
   title text NOT NULL,
   content text NOT NULL
 );
 
 -- Blogs Table (Gated under Personal Tab)
-CREATE TABLE IF NOT EXISTS public.blogs (
+CREATE TABLE public.blogs (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   slug text UNIQUE NOT NULL,
   title text NOT NULL,
@@ -54,7 +55,7 @@ CREATE TABLE IF NOT EXISTS public.blogs (
 );
 
 -- Comments Table (Nested comment thread on Blogs)
-CREATE TABLE IF NOT EXISTS public.comments (
+CREATE TABLE public.comments (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   blog_id uuid REFERENCES public.blogs(id) ON DELETE CASCADE NOT NULL,
   user_id uuid REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
@@ -64,7 +65,7 @@ CREATE TABLE IF NOT EXISTS public.comments (
 );
 
 -- Blog Reactions Table (Likes/Hearts/etc.)
-CREATE TABLE IF NOT EXISTS public.blog_reactions (
+CREATE TABLE public.blog_reactions (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   blog_id uuid REFERENCES public.blogs(id) ON DELETE CASCADE NOT NULL,
   user_id uuid REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
@@ -74,7 +75,7 @@ CREATE TABLE IF NOT EXISTS public.blog_reactions (
 );
 
 -- Projects Table (Gated under Professional Tab - Bento Grid)
-CREATE TABLE IF NOT EXISTS public.projects (
+CREATE TABLE public.projects (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   title text NOT NULL,
   description text NOT NULL,
@@ -87,7 +88,7 @@ CREATE TABLE IF NOT EXISTS public.projects (
 );
 
 -- Certifications Table (Gated under Professional Tab)
-CREATE TABLE IF NOT EXISTS public.certifications (
+CREATE TABLE public.certifications (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   title text NOT NULL,
   issuer text NOT NULL,
@@ -97,7 +98,7 @@ CREATE TABLE IF NOT EXISTS public.certifications (
 );
 
 -- One-Time Passwords (OTP) Table
-CREATE TABLE IF NOT EXISTS public.otps (
+CREATE TABLE public.otps (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   email text NOT NULL,
   otp_code text NOT NULL,
@@ -106,7 +107,7 @@ CREATE TABLE IF NOT EXISTS public.otps (
 );
 
 -- User Sessions (Tracks OTP-verified sessions)
-CREATE TABLE IF NOT EXISTS public.user_sessions (
+CREATE TABLE public.user_sessions (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   session_token text UNIQUE NOT NULL,
@@ -116,7 +117,7 @@ CREATE TABLE IF NOT EXISTS public.user_sessions (
 );
 
 -- Access Requests Table
-CREATE TABLE IF NOT EXISTS public.access_requests (
+CREATE TABLE public.access_requests (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id uuid REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
   email text NOT NULL,
