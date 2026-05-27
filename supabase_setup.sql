@@ -327,3 +327,8 @@ CREATE POLICY "Requests are viewable by requester" ON public.access_requests
 
 CREATE POLICY "Requests can be created by authenticated users" ON public.access_requests
   FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- User Sessions Policies
+CREATE POLICY "Allow select for session owners" ON public.user_sessions
+  FOR SELECT USING (auth.uid() = user_id);
+

@@ -64,6 +64,10 @@ export async function middleware(request: NextRequest) {
       .eq('user_id', user.id)
       .single();
 
+    if (sessionError) {
+      console.error('Middleware session query error:', sessionError);
+    }
+
     if (sessionData && !sessionError) {
       const expiresAt = new Date(sessionData.expires_at);
       if (sessionData.otp_verified && expiresAt > new Date()) {
