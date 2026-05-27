@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -56,8 +56,22 @@ export async function middleware(request: NextRequest) {
   let isOtpVerified = false;
 
   if (otpCookie) {
-    // Verify session token in database
-    const { data: sessionData, error: sessionError } = await supabase
+    // Verify session token in database using a service role client to bypass RLS
+    const adminKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    const supabaseAdmin = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      adminKey,
+      {
+        cookies: {
+          getAll() {
+            return [];
+          },
+          setAll() {},
+        },
+      }
+    );
+
+    const { data: sessionData, error: sessionError } = await supabaseAdmin
       .from('user_sessions')
       .select('otp_verified, expires_at')
       .eq('session_token', otpCookie)
