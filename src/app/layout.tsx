@@ -81,13 +81,15 @@ export default async function RootLayout({
                   >
                     <UserIcon className="w-4 h-4 text-neutral-600" />
                   </Link>
-                  <Link
-                    href="/auth/logout"
-                    className="w-7 h-7 rounded-full bg-neutral-100 flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all"
-                    title="Sign Out"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                  </Link>
+                  <form action="/auth/logout" method="POST" className="flex items-center">
+                    <button
+                      type="submit"
+                      className="w-7 h-7 rounded-full bg-neutral-100 flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all cursor-pointer border-0 outline-none"
+                      title="Sign Out"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                    </button>
+                  </form>
                 </div>
               ) : (
                 <Link href="/auth/login" className="btn-primary text-xs py-1.5 px-3">
