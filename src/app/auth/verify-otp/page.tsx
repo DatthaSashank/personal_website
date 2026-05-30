@@ -80,8 +80,7 @@ export default function VerifyOtpPage() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        router.push(next);
-        router.refresh();
+        window.location.href = next;
       } else {
         setError(data.error || 'Verification failed. Please try again.');
         setLoading(false);
