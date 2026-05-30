@@ -31,11 +31,6 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  // Retrieve user session
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const pathname = request.nextUrl.pathname;
 
   // Paths classification
@@ -43,9 +38,17 @@ export async function proxy(request: NextRequest) {
   const isAdminPage = pathname.startsWith('/admin');
   const isBlogPostPage = pathname.startsWith('/blog');
 
+  // Retrieve user session
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  console.log(`[Proxy Middleware] Path: ${pathname}, User ID: ${user?.id || 'null'}, Email: ${user?.email || 'null'}`);
+
   // 1. If not authenticated at all
   if (!user) {
     if (isAdminPage || isBlogPostPage || pathname === '/' || pathname === '/profile' || pathname === '/about') {
+      console.log(`[Proxy Middleware] Redirecting unauthenticated user from ${pathname} to /auth/login`);
       return NextResponse.redirect(new URL('/auth/login', request.url));
     }
     return response;
@@ -89,6 +92,8 @@ export async function proxy(request: NextRequest) {
       }
     }
   }
+
+  console.log(`[Proxy Middleware] Path: ${pathname}, isOtpVerified: ${isOtpVerified}`);
 
   // If Google authenticated but OTP not verified
   if (!isOtpVerified) {

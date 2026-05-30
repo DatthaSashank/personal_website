@@ -39,16 +39,14 @@ export default function ProfilePage() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        // Fetch profile
-        const { data: profData } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-
-        if (profData) {
-          setProfile(profData);
-          setNameInput(profData.name || '');
+        // Fetch profile from secure server API
+        const profileRes = await fetch('/api/auth/profile');
+        if (profileRes.ok) {
+          const pData = await profileRes.json();
+          if (pData.success && pData.profile) {
+            setProfile(pData.profile);
+            setNameInput(pData.profile.name || '');
+          }
         }
 
         // Fetch requests

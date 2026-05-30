@@ -10,8 +10,8 @@ export async function GET(request: NextRequest) {
   if (code) {
     const verifyUrl = new URL('/auth/verify-otp', origin);
     
-    // Create an array to temporarily collect cookies set by Supabase
-    const cookiesToSetLater: any[] = [];
+    // Create a Map to collect unique cookies by name to prevent duplication
+    const cookiesToSetLater = new Map<string, { value: string; options: any }>();
 
     // Initialize Supabase client bound to our temporary collector
     const supabase = createServerClient(
@@ -23,7 +23,9 @@ export async function GET(request: NextRequest) {
             return request.cookies.getAll();
           },
           setAll(cookiesToSet) {
-            cookiesToSet.forEach((c) => cookiesToSetLater.push(c));
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookiesToSetLater.set(name, { value, options });
+            });
           },
         },
       }
@@ -45,8 +47,8 @@ export async function GET(request: NextRequest) {
         const response = NextResponse.redirect(verifyUrl);
 
         // Inject the collected cookies into the redirect response
-        cookiesToSetLater.forEach(({ name, value, options }) => {
-          response.cookies.set(name, value, options);
+        cookiesToSetLater.forEach((cookie, name) => {
+          response.cookies.set(name, cookie.value, cookie.options);
         });
         
         return response;

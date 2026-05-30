@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabaseServer';
+import { createClient, createAdminClient } from '@/lib/supabaseServer';
 
 export async function GET() {
   try {
@@ -10,8 +10,10 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Retrieve requests submitted by the logged-in user
-    const { data, error } = await supabase
+    const supabaseAdmin = createAdminClient();
+
+    // Retrieve requests submitted by the logged-in user (using admin client to bypass RLS)
+    const { data, error } = await supabaseAdmin
       .from('access_requests')
       .select('*')
       .eq('user_id', user.id)
@@ -41,8 +43,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid request type' }, { status: 400 });
     }
 
-    // Check if there is already an active pending request of this type
-    const { data: existing, error: checkError } = await supabase
+    const supabaseAdmin = createAdminClient();
+
+    // Check if there is already an active pending request of this type (using admin client to bypass RLS)
+    const { data: existing, error: checkError } = await supabaseAdmin
       .from('access_requests')
       .select('*')
       .eq('user_id', user.id)
@@ -54,8 +58,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: 'Request is already pending.' });
     }
 
-    // Insert access request
-    const { error: insertError } = await supabase
+    // Insert access request (using admin client to bypass RLS)
+    const { error: insertError } = await supabaseAdmin
       .from('access_requests')
       .insert({
         user_id: user.id,
